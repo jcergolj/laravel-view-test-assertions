@@ -1,0 +1,21 @@
+{
+    "name": "jcergolj/laravel-view-test-assertions",
+    "description": "Missing Laravel view's test assertions",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Janez Cergolj",
+            "email": "me@jcergolj.me.uk"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable" : true,
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jcergolj\\LaravelViewTestAssertions\\LaravelViewTestAssertionsServiceProvider"
+            ]
+        }
+    }
+}
