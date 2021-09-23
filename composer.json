@@ -1,6 +1,7 @@
 {
     "name": "jcergolj/laravel-view-test-assertions",
     "description": "Missing Laravel view's test assertions",
+    "type": "package",
     "license": "MIT",
     "authors": [
         {
@@ -10,7 +11,15 @@
     ],
     "minimum-stability": "dev",
     "prefer-stable" : true,
-    "require": {},
+    "require": {
+        "php": ">=7.4",
+        "symfony/dom-crawler": "^5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jcergolj\\LaravelViewTestAssertions\\": "src/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
