@@ -9,21 +9,21 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class ViewTestAssertions
 {
+    protected $form = 'form';
+
     public function assertViewHasForm()
     {
         return function ($method = null, $action = null) {
             $this->ensureResponseHasView();
 
-            $form = $this->getFormElement();
+            Assert::assertNotEmpty($this->form, 'From element does not exists.');
 
-            Assert::assertNotEmpty($form, 'From element does not exists.');
-
-            if ($method !== null) {
-                Assert::assertSame(0, strcasecmp($method, $form->attr('method')), 'Form does not have '.$method.' method.');
+            if ($method !== null && strcasecmp($method, $this->form->attr('method')) !== 0) {
+                    Assert::fail('Form does not have '.$method.' method.');
             }
 
-            if ($action !== null) {
-                Assert::assertSame(0, strcasecmp($action, $form->attr('action')), 'Form does not have '.$method.' action.');
+            if ($action !== null && strcasecmp($action, $this->form->attr('action')) !== 0) {
+                Assert::fail('Form does not have '.$method.' action.');
             }
 
             return $this;
@@ -33,9 +33,9 @@ class ViewTestAssertions
     public function assertFormHasCSRF()
     {
         return function () {
-            $form = $this->getFormElement();
-
-            Assert::assertNotEmpty($form->filter('input[type="hidden"][name="_token"]'), 'Form is missing CSRF protection. Add @csrf to the view.');
+            if ($this->form->filter('input[type="hidden"][name="_token"]')->first()->matches('input[type="hidden"][name="_token"]') === false) {
+                Assert::fail('Form is missing CSRF protection. Add @csrf to the view.');
+            }
 
             return $this;
         };
@@ -44,15 +44,13 @@ class ViewTestAssertions
     public function assertFormHasSubmitButton()
     {
         return function ($type = 'submit', $value = null) {
-            $form = $this->getFormElement();
-
             $findable = 'input[type="'.$type.'"]';
 
             if ($value !== null) {
                 $findable .= '[value="'.$value.'"]';
             }
 
-            if ($form->filter($findable) === null) {
+            if ($this->form->filter($findable) === null) {
                 Assert::fail('Form does not have submit button.');
             }
 
@@ -238,9 +236,9 @@ class ViewTestAssertions
     public function assertFieldHasValidationErrorMsg()
     {
         return function ($errorMsg) {
-            $form = $this->getFormElement();
-
-            Assert::assertTrue(Str::of($form->text())->contains($errorMsg), 'Form does not have validation error text.');
+            if (!Str::of($this->form->text())->contains($errorMsg)) {
+                Assert::fail('Form does not have validation error text.');
+            }
 
             return $this;
         };
@@ -249,8 +247,6 @@ class ViewTestAssertions
     public function assertFormHasField()
     {
         return function ($type, $name = null, $value = null) {
-            $form = $this->getFormElement();
-
             $msg = "Form does not have $type field";
             if ($type === 'select') {
                 $filterable = 'select';
@@ -268,17 +264,26 @@ class ViewTestAssertions
                 $filterable .='[value="'.$value.'"]';
             }
 
-            Assert::assertNotEmpty($form->filter($filterable), $msg);
+            if ($this->form->filter($filterable)->first()->matches($filterable) === false) {
+                Assert::fail($msg);
+            }
 
             return $this;
         };
     }
 
-    protected function getFormElement()
+    public function getFormElement()
     {
-        return function () {
+        return function ($selector = null) {
             $crawler = new Crawler($this->getContent());
-            return $crawler->filter('form');
+            $filterable = 'form';
+            if ($selector !== null) {
+                $filterable .= "[$selector]";
+            }
+
+            $this->form = $crawler->filter($filterable);
+
+            return $this;
         };
     }
 }

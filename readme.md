@@ -12,6 +12,10 @@ That's why I created this package. It is my attempt/proposal for adding a bit of
 `composer require --dev jcergolj/laravel-view-test-assertions`
 
 # Assertions
+`getFormElement(string $selector = null) // if selector is null first form element is used`
+
+`assertViewHasForm(string $method = null, string $action = null)`
+
 `assertViewHasForm(string $method = null, string $action = null)`
 
 `assertFormHasCSRF()`
@@ -89,7 +93,7 @@ That's why I created this package. It is my attempt/proposal for adding a bit of
     </head>
 
     <body class="antialiased">
-        <form method="post" action="/users">
+        <form method="post" action="/users" id="first">
             <h1>Form</h1>
 
             @csrf
@@ -106,6 +110,10 @@ That's why I created this package. It is my attempt/proposal for adding a bit of
         <div id="parent">
             <div class="child"></div>
         </div>
+
+        <form method="post" action="/post" id="second">
+            <input type="text" name="title" />
+        </form>
 
     </body>
 </html>
@@ -131,6 +139,7 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200)
+            ->getFormElement()
             ->assertStatus(200)
             ->assertViewHasForm()
             ->assertViewHasForm('post')
@@ -148,7 +157,10 @@ class ExampleTest extends TestCase
             ->assertFormHasCheckbox('confirm', 1)
             ->assertElementHasChild('select[name="age"]', 'option[value="5"]')
             ->assertElementHasChild('select[name="age"]', 'option[plaintext="5 Years"]')
-            ->assertElementHasChild('div#parent', 'div.child');
+            ->assertElementHasChild('div#parent', 'div.child')
+            ->getFormElement('id="second"')
+            ->assertViewHasForm(null, '/post')
+            ->assertFormHasTextInput('title');
     }
 }
 ```
