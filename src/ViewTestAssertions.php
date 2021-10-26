@@ -9,21 +9,29 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class ViewTestAssertions
 {
-    protected $form = 'form';
+    protected $form = null;
 
     public function assertViewHasForm()
     {
-        return function ($method = null, $action = null) {
+        return function ($selector = null, $method = null, $action = null) {
             $this->ensureResponseHasView();
 
-            Assert::assertNotEmpty($this->form, 'From element does not exists.');
+            $this->selectFormElement($selector);
+
+            if ($this->form->getNode(0) === null)
+            {
+                Assert::fail('From element does not exists.');
+                return $this;
+            }
 
             if ($method !== null && strcasecmp($method, $this->form->attr('method')) !== 0) {
-                    Assert::fail('Form does not have '.$method.' method.');
+                Assert::fail('Form does not have '.$method.' method.');
+                return $this;
             }
 
             if ($action !== null && strcasecmp($action, $this->form->attr('action')) !== 0) {
                 Assert::fail('Form does not have '.$method.' action.');
+                return $this;
             }
 
             return $this;
@@ -33,7 +41,7 @@ class ViewTestAssertions
     public function assertFormHasCSRF()
     {
         return function () {
-            if ($this->form->filter('input[type="hidden"][name="_token"]')->first()->matches('input[type="hidden"][name="_token"]') === false) {
+            if ($this->form->filter('input[type="hidden"][name="_token"]')->getNode(0) === null) {
                 Assert::fail('Form is missing CSRF protection. Add @csrf to the view.');
             }
 
@@ -264,7 +272,7 @@ class ViewTestAssertions
                 $filterable .='[value="'.$value.'"]';
             }
 
-            if ($this->form->filter($filterable)->first()->matches($filterable) === false) {
+            if ($this->form->filter($filterable)->getNode(0) === null) {
                 Assert::fail($msg);
             }
 
@@ -272,7 +280,7 @@ class ViewTestAssertions
         };
     }
 
-    public function getFormElement()
+    protected function selectFormElement()
     {
         return function ($selector = null) {
             $crawler = new Crawler($this->getContent());

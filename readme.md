@@ -12,11 +12,9 @@ That's why I created this package. It is my attempt/proposal for adding a bit of
 `composer require --dev jcergolj/laravel-view-test-assertions`
 
 # Assertions
-`getFormElement(string $selector = null) // if selector is null first form element is used`
-
-`assertViewHasForm(string $method = null, string $action = null)`
-
-`assertViewHasForm(string $method = null, string $action = null)`
+`assertViewHasForm(string $selector = null, string $method = null, string $action = null)`
+<br/>
+**This assertion should alway be called first. Based on selector form is selected. By default first form is selected.**
 
 `assertFormHasCSRF()`
 
@@ -139,11 +137,8 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200)
-            ->getFormElement()
             ->assertStatus(200)
-            ->assertViewHasForm()
-            ->assertViewHasForm('post')
-            ->assertViewHasForm(null, '/users')
+            ->assertViewHasForm() // first form is selected by default
             ->assertViewHasForm('post', '/users')
             ->assertFormHasField('text', 'first_name')
             ->assertFormHasRadio('gender')
@@ -158,8 +153,12 @@ class ExampleTest extends TestCase
             ->assertElementHasChild('select[name="age"]', 'option[value="5"]')
             ->assertElementHasChild('select[name="age"]', 'option[plaintext="5 Years"]')
             ->assertElementHasChild('div#parent', 'div.child')
-            ->getFormElement('id="second"')
+            ->selectFormElement('id="second"')
             ->assertViewHasForm(null, '/post')
+            ->assertFormHasTextInput('title');
+
+        // if multiple forms are presented on the page, personally would split assertions;
+        $response->assertViewHasForm('id="second"')
             ->assertFormHasTextInput('title');
     }
 }
