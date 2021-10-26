@@ -24,7 +24,7 @@ class ViewTestAssertions
                 return $this;
             }
 
-            if ($method !== null && strcasecmp($method, $this->form->attr('method')) !== 0) {
+            if ($method !== null && strcasecmp($method, $this->getFormMethod()) !== 0) {
                 Assert::fail('Form does not have '.$method.' method.');
                 return $this;
             }
@@ -292,6 +292,17 @@ class ViewTestAssertions
             $this->form = $crawler->filter($filterable);
 
             return $this;
+        };
+    }
+
+    protected function getFormMethod()
+    {
+        return function () {
+            if ($this->form->filter('input[type="hidden"][name="_method"]')->getNode(0) !== null) {
+                return $this->form->filter('input[type="hidden"][name="_method"]')->attr('value');
+            }
+
+            return $this->form->attr('method');
         };
     }
 }
