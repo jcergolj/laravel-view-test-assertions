@@ -233,7 +233,7 @@ class ViewTestAssertions
                 throw new Exception('Parent element does not exists.');
             }
 
-            if ($parentElement->filter($childSelector) === null) {
+            if ($parentElement->filter($childSelector)->getNode(0) === null) {
                 Assert::fail('Child element '.$childSelector.' does not exists.');
             }
 
