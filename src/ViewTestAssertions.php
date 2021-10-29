@@ -20,7 +20,7 @@ class ViewTestAssertions
 
             if ($this->form->getNode(0) === null)
             {
-                Assert::fail('From element does not exists.');
+                Assert::fail('Form element does not exists.');
                 return $this;
             }
 
