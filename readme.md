@@ -9,12 +9,18 @@ Granted, you can use Dusk, but it is significantly slower than regular feature t
 That's why I created this package. It is my attempt/proposal for adding a bit of TDD concept to the views too. Hope you like it.
 
 # Installation
-`composer require --dev jcergolj/laravel-view-test-assertions`
+
+```bash
+composer require --dev jcergolj/laravel-view-test-assertions
+```
 
 # Assertions
+
 `assertViewHasForm(string $selector = null, string $method = null, string $action = null)`
+
 <br/>
-**This assertion should alway be called first. Based on selector form is selected. By default first form is selected.**
+
+> **This assertion should alway be called first. Based on selector form is selected. By default first form is selected.**
 
 `assertFormHasCSRF()`
 
@@ -79,7 +85,8 @@ That's why I created this package. It is my attempt/proposal for adding a bit of
 # Example
 
 ## View
-```
+
+```html
 // resources/welcome.blade.php
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -118,7 +125,7 @@ That's why I created this package. It is my attempt/proposal for adding a bit of
 ```
 
 ## Example Test
-```
+```php
 <?php
 
 namespace Tests\Feature;
