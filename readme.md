@@ -143,8 +143,7 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200)
-            ->assertStatus(200)
+        $response->assertStatus(200)            
             ->assertViewHasForm() // first form is selected by default
             ->assertViewHasForm('post', '/users')
             ->assertFormHasField('text', 'first_name')
