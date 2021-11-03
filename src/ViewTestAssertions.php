@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Assert;
 use Symfony\Component\DomCrawler\Crawler;
+use PHPUnit\TextUI\XmlConfiguration\PHPUnit;
 
 class ViewTestAssertions
 {
@@ -34,6 +35,8 @@ class ViewTestAssertions
                 return $this;
             }
 
+            $this->pass();
+
             return $this;
         };
     }
@@ -44,6 +47,8 @@ class ViewTestAssertions
             if ($this->form->filter('input[type="hidden"][name="_token"]')->getNode(0) === null) {
                 Assert::fail('Form is missing CSRF protection. Add @csrf to the view.');
             }
+
+            $this->pass();
 
             return $this;
         };
@@ -61,6 +66,8 @@ class ViewTestAssertions
             if ($this->form->filter($findable) === null) {
                 Assert::fail('Form does not have submit button.');
             }
+
+            $this->pass();
 
             return $this;
         };
@@ -237,6 +244,8 @@ class ViewTestAssertions
                 Assert::fail('Child element '.$childSelector.' does not exists.');
             }
 
+            $this->pass();
+
             return $this;
         };
     }
@@ -247,6 +256,8 @@ class ViewTestAssertions
             if (!Str::of($this->form->text())->contains($errorMsg)) {
                 Assert::fail('Form does not have validation error text.');
             }
+
+            $this->pass();
 
             return $this;
         };
@@ -275,6 +286,8 @@ class ViewTestAssertions
             if ($this->form->filter($filterable)->getNode(0) === null) {
                 Assert::fail($msg);
             }
+
+            $this->pass();
 
             return $this;
         };
@@ -305,4 +318,12 @@ class ViewTestAssertions
             return $this->form->attr('method');
         };
     }
+
+    protected function pass()
+    {
+        return function () {
+            Assert::assertNull(null);
+        };
+    }
 }
+
