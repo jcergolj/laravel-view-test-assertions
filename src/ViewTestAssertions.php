@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Assert;
 use Symfony\Component\DomCrawler\Crawler;
-use PHPUnit\TextUI\XmlConfiguration\PHPUnit;
 
 class ViewTestAssertions
 {
@@ -26,12 +25,12 @@ class ViewTestAssertions
             }
 
             if ($method !== null && strcasecmp($method, $this->getFormMethod()) !== 0) {
-                Assert::fail('Form does not have '.$method.' method.');
+                Assert::fail('Form (action: '.$this->form->attr('action').') (method: '.$this->form->attr('method').') does not have '.$method.' method.');
                 return $this;
             }
 
             if ($action !== null && strcasecmp($action, $this->form->attr('action')) !== 0) {
-                Assert::fail('Form does not have '.$method.' action.');
+                Assert::fail('Form (action: '.$this->form->attr('action').') does not have '.$action.' action.');
                 return $this;
             }
 
@@ -326,4 +325,3 @@ class ViewTestAssertions
         };
     }
 }
-
