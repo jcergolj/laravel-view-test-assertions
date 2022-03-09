@@ -18,8 +18,7 @@ class ViewTestAssertions
 
             $this->selectFormElement($selector);
 
-            if ($this->form->getNode(0) === null)
-            {
+            if ($this->form->getNode(0) === null) {
                 Assert::fail('Form element does not exists.');
                 return $this;
             }
@@ -270,7 +269,6 @@ class ViewTestAssertions
                 $filterable = 'select';
             } else {
                 $filterable = 'input[type="'.$type.'"]';
-
             }
 
             if ($name !== null) {
@@ -284,6 +282,34 @@ class ViewTestAssertions
 
             if ($this->form->filter($filterable)->getNode(0) === null) {
                 Assert::fail($msg);
+            }
+
+            $this->pass();
+
+            return $this;
+        };
+    }
+
+    public function assertFormHasTextarea()
+    {
+        return function ($name = null, $text = null) {
+            $filterable = 'textarea';
+
+            if ($name !== null) {
+                $filterable .='[name="'.$name.'"]';
+            }
+
+            if ($this->form->filter($filterable)->getNode(0) === null) {
+                Assert::fail("Form does not have textarea with name {$name}.");
+            }
+
+            if ($text === null) {
+                $this->pass();
+                return $this;
+            }
+
+            if ($this->form->filter($filterable)->text() !== $text) {
+                Assert::fail("Form does not have textarea with {$text} text.");
             }
 
             $this->pass();

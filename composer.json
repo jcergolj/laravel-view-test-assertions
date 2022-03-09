@@ -13,7 +13,7 @@
     "prefer-stable" : true,
     "require": {
         "php": ">=7.4",
-        "symfony/dom-crawler": "^5.3"
+        "symfony/dom-crawler": "^6.0"
     },
     "autoload": {
         "psr-4": {
