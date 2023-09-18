@@ -20,16 +20,19 @@ class ViewTestAssertions
 
             if ($this->form->getNode(0) === null) {
                 Assert::fail('Form element does not exists.');
+
                 return $this;
             }
 
             if ($method !== null && strcasecmp($method, $this->getFormMethod()) !== 0) {
                 Assert::fail('Form (action: '.$this->form->attr('action').') (method: '.$this->form->attr('method').') does not have '.$method.' method.');
+
                 return $this;
             }
 
             if ($action !== null && strcasecmp($action, $this->form->attr('action')) !== 0) {
                 Assert::fail('Form (action: '.$this->form->attr('action').') does not have '.$action.' action.');
+
                 return $this;
             }
 
@@ -251,7 +254,7 @@ class ViewTestAssertions
     public function assertFieldHasValidationErrorMsg()
     {
         return function ($errorMsg) {
-            if (!Str::of($this->form->text())->contains($errorMsg)) {
+            if (! Str::of($this->form->text())->contains($errorMsg)) {
                 Assert::fail('Form does not have validation error text.');
             }
 
@@ -272,12 +275,12 @@ class ViewTestAssertions
             }
 
             if ($name !== null) {
-                $filterable .='[name='.$name.']';
+                $filterable .= '[name='.$this->escapeName($name).']';
                 $msg .= " named $name.";
             }
 
             if ($value !== null && $type !== 'select') {
-                $filterable .='[value="'.$value.'"]';
+                $filterable .= '[value="'.$value.'"]';
             }
 
             if ($this->form->filter($filterable)->getNode(0) === null) {
@@ -296,7 +299,7 @@ class ViewTestAssertions
             $filterable = 'textarea';
 
             if ($name !== null) {
-                $filterable .='[name="'.$name.'"]';
+                $filterable .= '[name="'.$this->escapeName($name).'"]';
             }
 
             if ($this->form->filter($filterable)->getNode(0) === null) {
@@ -305,6 +308,7 @@ class ViewTestAssertions
 
             if ($text === null) {
                 $this->pass();
+
                 return $this;
             }
 
@@ -348,6 +352,17 @@ class ViewTestAssertions
     {
         return function () {
             Assert::assertNull(null);
+        };
+    }
+
+    protected function escapeName()
+    {
+        return function ($name) {
+            if (strpos($name, '\\[') !== false && strpos($name, '\\]') !== false) {
+                return $name;
+            }
+
+            return str_replace(['[', ']'], ['\\[', '\\]'], $name);
         };
     }
 }

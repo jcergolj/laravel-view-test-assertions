@@ -26,5 +26,15 @@
                 "Jcergolj\\LaravelViewTestAssertions\\LaravelViewTestAssertionsServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.1",
+        "laravel/pint": "^1.9"
+    },
+    "scripts": {
+        "pint": "vendor/bin/pint",
+        "analyse": [
+            "@pint"
+        ]
     }
 }

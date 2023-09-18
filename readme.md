@@ -117,7 +117,7 @@ composer require --dev jcergolj/laravel-view-test-assertions
         </div>
 
         <form method="post" action="/post" id="second">
-            <input type="text" name="title" />
+            <input type="text" name="title[]" />
         </form>
 
     </body>
@@ -143,21 +143,21 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200)            
+        $response->assertStatus(200)
             ->assertViewHasForm() // first form is selected by default
-            ->assertViewHasForm('post', '/users')
+            ->assertViewHasForm(null, 'post', '/users')
             ->assertFormHasField('text', 'first_name')
-            ->assertFormHasRadio('gender')
-            ->assertFormHasRadio('gender', 'male')
+            ->assertFormHasRadioInput('gender')
+            ->assertFormHasRadioInput('gender', 'male')
             ->assertFormHasCSRF()
             ->assertFormHasSubmitButton()
             ->assertFieldHasValidationErrorMsg(trans('validation.alpha', ['attribute' => 'First Name']))
             ->assertFormHasField('select', 'age')
             ->assertFormHasDropdown('age')
-            ->assertFormHasCheckbox('confirm')
-            ->assertFormHasCheckbox('confirm', 1)
+            ->assertFormHasCheckboxInput('confirm')
+            ->assertFormHasCheckboxInput('confirm', 1)
             ->assertElementHasChild('select[name="age"]', 'option[value="5"]')
-            ->assertElementHasChild('select[name="age"]', 'option[plaintext="5 Years"]')
+            ->assertElementHasChild('select[name="age"]', 'option:contains("5 Years")')
             ->assertElementHasChild('div#parent', 'div.child')
             ->selectFormElement('id="second"')
             ->assertViewHasForm(null, '/post')
@@ -165,7 +165,7 @@ class ExampleTest extends TestCase
 
         // if multiple forms are presented on the page, personally would split assertions;
         $response->assertViewHasForm('id="second"')
-            ->assertFormHasTextInput('title');
+            ->assertFormHasTextInput('title[]');
     }
 }
 ```
