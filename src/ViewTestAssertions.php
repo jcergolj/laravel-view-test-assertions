@@ -5,6 +5,7 @@ namespace Jcergolj\LaravelViewTestAssertions;
 use Exception;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Assert;
+use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
 use Symfony\Component\DomCrawler\Crawler;
 
 class ViewTestAssertions
@@ -331,7 +332,11 @@ class ViewTestAssertions
                 $filterable .= "[$selector]";
             }
 
-            $this->form = $crawler->filter($filterable);
+            try {
+                $this->form = $crawler->filter($filterable);
+            } catch (SyntaxErrorException $e) {
+                $this->form = $crawler->filter($selector);
+            }
 
             return $this;
         };
