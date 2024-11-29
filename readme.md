@@ -24,11 +24,11 @@ composer require --dev jcergolj/laravel-view-test-assertions
 
 `assertFormHasCSRF()`
 
-`assertFormHasSubmitButton(string $type = 'submit', string $value = null)`
+`assertFormHasSubmitButton(string $name = null, string $value = null)`
 
 `assertFormHasTextInput(string $name = null, string $value)`
 
-`assertFormHasButtonInput(string $name = null, string $value)`
+`assertFormHasButtonInput($type = 'submit', string $name = null, string $value)`
 
 `assertFormHasColorInput(string $name = null, string $value)`
 

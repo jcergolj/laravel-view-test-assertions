@@ -58,27 +58,32 @@ class ViewTestAssertions
 
     public function assertFormHasSubmitButton()
     {
-        return function ($type = 'submit', $value = null) {
-            $findable = 'input[type="'.$type.'"]';
+        return function ($name = null, $value = null) {
+            return $this->assertFormHasButtonInput('submit', $name, $value);
+        };
+    }
+
+    public function assertFormHasButtonInput()
+    {
+        return function ($type = 'submit', $name = null, $value = null) {
+
+            $findable = 'button[type="'.$type.'"]';
 
             if ($value !== null) {
                 $findable .= '[value="'.$value.'"]';
             }
 
-            if ($this->form->filter($findable) === null) {
+            if ($name !== null) {
+                $findable .= '[name="'.$name.'"]';
+            }
+
+            if ($this->form->filter($findable)->getNode(0) === null) {
                 Assert::fail('Form does not have submit button.');
             }
 
             $this->pass();
 
             return $this;
-        };
-    }
-
-    public function assertFormHasButtonInput()
-    {
-        return function ($name = null, $value = null) {
-            return $this->assertFormHasField('button', $name, $value);
         };
     }
 
