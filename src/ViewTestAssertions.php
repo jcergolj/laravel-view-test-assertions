@@ -4,10 +4,10 @@ namespace Jcergolj\LaravelViewTestAssertions;
 
 use Exception;
 use Illuminate\Support\Str;
-use PHPUnit\Framework\Assert;
 use Illuminate\Testing\TestResponse;
-use Symfony\Component\DomCrawler\Crawler;
+use PHPUnit\Framework\Assert;
 use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
+use Symfony\Component\DomCrawler\Crawler;
 
 class ViewTestAssertions
 {
@@ -258,7 +258,29 @@ class ViewTestAssertions
             }
 
             if ($parentElement->filter($childSelector)->getNode(0) === null) {
-                Assert::fail('Child element '.$childSelector.' does not exists.');
+                Assert::fail('Child element '.$childSelector.' does not exist.');
+            }
+
+            $this->pass();
+
+            return $this;
+        };
+    }
+
+    public function assertElementMissigChild()
+    {
+        return function ($parentSelector, $childSelector) {
+            $this->ensureResponseHasView();
+
+            $crawler = new Crawler($this->getContent());
+            $parentElement = $crawler->filter($parentSelector);
+
+            if ($parentElement === null) {
+                throw new Exception('Parent element does not exists.');
+            }
+
+            if ($parentElement->filter($childSelector)->getNode(0) !== null) {
+                Assert::fail('Child element '.$childSelector.' does exist.');
             }
 
             $this->pass();
