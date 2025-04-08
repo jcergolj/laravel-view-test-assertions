@@ -5,12 +5,22 @@ namespace Jcergolj\LaravelViewTestAssertions;
 use Exception;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Assert;
-use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
+use Illuminate\Testing\TestResponse;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
 
 class ViewTestAssertions
 {
     protected $form = null;
+
+    public function makeFromViewString()
+    {
+         return static function ($view, $data) {
+            return TestResponse::fromBaseResponse(
+                response()->view($view, $data)
+            );
+         };
+    }
 
     public function assertViewHasForm()
     {
