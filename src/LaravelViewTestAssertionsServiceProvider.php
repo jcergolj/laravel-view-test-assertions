@@ -9,11 +9,8 @@ class LaravelViewTestAssertionsServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        TestResponse::mixin(new ViewTestAssertions());
+        TestResponse::mixin(new ViewTestAssertions);
     }
 
-    public function register()
-    {
-
-    }
+    public function register() {}
 }

@@ -15,11 +15,11 @@ class ViewTestAssertions
 
     public function makeFromViewString()
     {
-         return static function ($view, $data) {
+        return static function ($view, $data) {
             return TestResponse::fromBaseResponse(
                 response()->view($view, $data)
             );
-         };
+        };
     }
 
     public function assertViewHasForm()
@@ -244,7 +244,7 @@ class ViewTestAssertions
         };
     }
 
-    //id, name, selector, class = id, name, selector, class
+    // id, name, selector, class = id, name, selector, class
     public function assertElementHasChild()
     {
         return function ($parentSelector, $childSelector) {
